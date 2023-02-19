@@ -1,6 +1,7 @@
 #include <3ds.h>
 #include "ifile.h"
 #include "utils.h" // for makeARMBranch
+#include "luma_config.h"
 #include "plugin.h"
 #include "fmt.h"
 #include "menu.h"
@@ -13,7 +14,7 @@
 
 #define THREADVARS_MAGIC  0x21545624 // !TV$
 
-static const char *g_title = "Cargador de plugins";
+static const char *g_title = "Cargador de Plugins";
 PluginLoaderContext PluginLoaderCtx;
 extern u32 g_blockMenuOpen;
 
@@ -55,7 +56,7 @@ bool        PluginLoader__IsEnabled(void)
 void        PluginLoader__MenuCallback(void)
 {
     PluginLoaderCtx.isEnabled = !PluginLoaderCtx.isEnabled;
-    RequestSaveSettings();
+    LumaConfig_RequestSaveSettings();
     PluginLoader__UpdateMenu();
 }
 
@@ -163,7 +164,7 @@ void     PluginLoader__HandleCommands(void *_ctx)
             if (cmdbuf[1] != ctx->isEnabled)
             {
                 ctx->isEnabled = cmdbuf[1];
-                RequestSaveSettings();
+                LumaConfig_RequestSaveSettings();
                 PluginLoader__UpdateMenu();
             }
 

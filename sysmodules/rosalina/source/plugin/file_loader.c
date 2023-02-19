@@ -135,7 +135,7 @@ static Result   CheckPluginCompatibility(_3gx_Header *header, u32 processTitle)
     }
 
     sprintf(errorBuf, "El plugin - %s -\nno es compatible con este juego.\n" \
-                      "Contacta \"%s\" para mas informacion.", header->infos.titleMsg, header->infos.authorMsg);
+                      "Contacta \"%s\" para mas info.", header->infos.titleMsg, header->infos.authorMsg);
     
     PluginLoaderCtx.error.message = errorBuf;
 
@@ -191,10 +191,10 @@ bool     TryToLoadPlugin(Handle process)
     {
         const char * errors[] = 
         {
-            "No se puede leer el archivo.",
-            "Archivo de plugin no valido\nNo es un formato de plugin 3GX valido!",
-            "Archivo de plugin desactualizado\nBusca un plugin actualizado.",
-            "Cargador de plugins desactualizado\nComprueba actualizaciones de Luma3DS."   
+            "Imposible leer arch.",
+            "Arch. de plugin no valido\nFormato 3GX no valido!",
+            "Plugin desactualizado\nBusca un plugin actualizado.",
+            "Plugin loader desactualizado\nBusca un Luma3DS mas actualizado."   
         };
 
         ctx->error.message = errors[R_MODULE(res) == RM_LDR ? R_DESCRIPTION(res) : 0];
@@ -202,11 +202,11 @@ bool     TryToLoadPlugin(Handle process)
 
     // Read header
     if (!res && R_FAILED((res = Read_3gx_Header(&plugin, &fileHeader))))
-        ctx->error.message = "No se puede leer el archivo";
+        ctx->error.message = "Imposible leer el arch.";
 
     // Set memory region size according to header
     if (!res && R_FAILED((res = MemoryBlock__SetSize(memRegionSizes[fileHeader.infos.memoryRegionSize])))) {
-        ctx->error.message = "No se pudo establecer el\ntam. de la memoria.";
+        ctx->error.message = "Imposible establecer el\ntam. de la memoria.";
     }
     
     // Ensure memory block is mounted
@@ -221,7 +221,7 @@ bool     TryToLoadPlugin(Handle process)
 
     // Parse rest of header
     if (!res && R_FAILED((res = Read_3gx_ParseHeader(&plugin, header))))
-        ctx->error.message = "No se puede leer el archivo";
+        ctx->error.message = "Imposible leer el arch.";
 
     // Read embedded save/load functions
     if (!res && R_FAILED((res = Read_3gx_EmbeddedPayloads(&plugin, header))))
@@ -236,9 +236,9 @@ bool     TryToLoadPlugin(Handle process)
 
     // Read code
     if (!res && R_FAILED(res = Read_3gx_LoadSegments(&plugin, header, ctx->memblock.memblock + sizeof(PluginHeader)))) {
-        if (res == MAKERESULT(RL_PERMANENT, RS_INVALIDARG, RM_LDR, RD_NO_DATA)) ctx->error.message = "Este plugin requiere una funcion de carga.";
-        else if (res == MAKERESULT(RL_PERMANENT, RS_INVALIDARG, RM_LDR, RD_INVALID_ADDRESS)) ctx->error.message = "Este archivo de plugin esta corrupto.";
-        else ctx->error.message = "No se puede leer el codigo del plugin";
+        if (res == MAKERESULT(RL_PERMANENT, RS_INVALIDARG, RM_LDR, RD_NO_DATA)) ctx->error.message = "This plugin requires a loading function.";
+        else if (res == MAKERESULT(RL_PERMANENT, RS_INVALIDARG, RM_LDR, RD_INVALID_ADDRESS)) ctx->error.message = "This plugin file is corrupted.";
+        else ctx->error.message = "Imposible leer codigo\ndel plugin";
     }
 
     if (R_FAILED(res))
@@ -280,7 +280,7 @@ bool     TryToLoadPlugin(Handle process)
 
         if (R_FAILED((res = svcMapProcessMemoryEx(CUR_PROCESS_HANDLE, procStart, process, procStart, 0x1000))))
         {
-            ctx->error.message = "No se pudo mapear el proceso";
+            ctx->error.message = "Imposible mapear el proceso";
             ctx->error.code = res;
             goto exitFail;
         }

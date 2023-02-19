@@ -34,7 +34,7 @@ u32    DispErrMessage(const char *title, const char *message, const Result error
 {
     char buf[100];
 
-    sprintf(buf, "Cod. de error: 0x%08lX", error);
+    sprintf(buf, "Cod. error: 0x%08lX", error);
     menuEnter();
 
     Draw_Lock();
@@ -102,7 +102,7 @@ void    DisplayPluginMenu(u32   *cmdbuf)
             }
 
             // Draw hint
-            if (hints[cursor])
+            if (hints[cursor][0])
                 Draw_DrawString(10, 200, COLOR_TITLE, hints[cursor]);
         }
 

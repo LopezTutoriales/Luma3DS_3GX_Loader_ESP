@@ -253,7 +253,7 @@ GDB_DECLARE_REMOTE_COMMAND_HANDLER(TranslateHandle)
         {
             svcGetProcessInfo((s64 *)serviceBuf, (u32)owner, 0x10000);
             svcCloseHandle((u32)owner);
-            sprintf(ownerBuf, " owner: %s", serviceBuf);
+            sprintf(ownerBuf, " propietario: %s", serviceBuf);
         }
         n = sprintf(outbuf, "(%s *)0x%08lx /* %lu %s%s */\n", classBuf, kernelAddr, refcount, refcount == 1 ? "referencia" : "referencias", ownerBuf);
     }
@@ -300,10 +300,10 @@ GDB_DECLARE_REMOTE_COMMAND_HANDLER(ListAllHandles)
     if (R_FAILED(count = svcControlProcess(process, PROCESSOP_GET_ALL_HANDLES, (u32)procHandles, val)))
         n = sprintf(outbuf, "Ocurrio un error: %08lX\n", count);
     else if (count == 0)
-        n = sprintf(outbuf, "Proceso sin identificadores ?\n");
+        n = sprintf(outbuf, "Proceso sin identificador ?\n");
     else
     {
-        n = sprintf(outbuf, "Encontrados %ld identif.\n", count);
+        n = sprintf(outbuf, "Encontrados %ld identificadores.\n", count);
 
         const char *comma = "";
         for (s32 i = 0; i < count && n < (GDB_BUF_LEN >> 1) - 20; ++i)
@@ -396,7 +396,7 @@ GDB_DECLARE_REMOTE_COMMAND_HANDLER(ToggleExternalMemoryAccess)
 
     ctx->enableExternalMemoryAccess = !ctx->enableExternalMemoryAccess;
 
-    n = sprintf(outbuf, "Acceso a memoria externa %s con exito.\n", ctx->enableExternalMemoryAccess ? "enabled" : "disabled");
+    n = sprintf(outbuf, "Acceso a memoria externa %s con exito.\n", ctx->enableExternalMemoryAccess ? "habilitado" : "deshabilitado");
 
     return GDB_SendHexPacket(ctx, outbuf, n);
 }
@@ -442,7 +442,7 @@ GDB_DECLARE_REMOTE_COMMAND_HANDLER(GetThreadPriority)
     int n;
     char outbuf[GDB_BUF_LEN / 2 + 1];
 
-    n = sprintf(outbuf, "Prioridad del hilo (%ld): 0x%02lX\n", ctx->selectedThreadId,
+    n = sprintf(outbuf, "Hilo prioridad (%ld): 0x%02lX\n", ctx->selectedThreadId,
                 GDB_GetDynamicThreadPriority(ctx, ctx->selectedThreadId));
 
     return GDB_SendHexPacket(ctx, outbuf, n);
